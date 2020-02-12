@@ -59,6 +59,7 @@
 
   - 데이터베이스를 만들고 초기화하자
 - 명령어
+  
   - `python manage.py migrate`
   
 - #### 모델 만들기(Models.py)
@@ -169,7 +170,7 @@ class Choice(models.Model):
   admin.site.register(Question)	# [Question] 모델을 등록해준다.
   ```
 
-![question_admin_register](.\img\question_admin_register.PNG)
+![question_admin_register](.\img\question_admin_register.jpg)
 
 잘 등록된 것을 볼 수 있다.
 

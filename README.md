@@ -174,3 +174,99 @@ class Choice(models.Model):
 
 잘 등록된 것을 볼 수 있다.
 
+- #### 여러가지 뷰 더 추가하기
+
+  - 투표 목록 : 투표 목록 표시 + 상세 페이지 이동 링크
+  - 투표 상세 : 투표의 상세 항목 표시
+  - 투표 기능 : 선택한 답변에 따라 +1해줌
+  - 투표 결과 : 선택한 답변 반영 후 결과 보여줌
+
+- #### polls/views.py (Controller 역할)
+
+  ```python
+  from django.shortcuts import render
+  from django.http import HttpResponse
+  
+  # Create your views here.
+  def index(request):
+      latest_question_list = Question.objects.order_by('-pub_date')[:5]
+      
+      # 쿼리들의 질문을 나열한 것들을 합친 결과 : output
+      output=', '.join([q.question_text for q in latest_question_list])
+      # return HttpResponse("Hello, world. You're at the polls index!!")
+      return HttpResponse(output)
+  
+  # 투표 상세 : 투표의 상세 항목 표시
+  def detail(request,question_id):
+      return HttpResponse("You're looging at question %s." % question_id)
+  
+  # 투표 결과 : 선택한 답변 반영 후 결과 보여줌
+  def results(request,question_id):
+      response = "You're looking at the results of question %s."
+      return HttpResponse(response % question_id)
+  
+  # 투표 기능 : 선택한 답변에 따라 +1해줌
+  def vote(request,question_id):
+      return HttpResponse("You're voting on question %s." % question_id)
+  ```
+
+아직까지는 특별한 기능 없이 값만 출력한다. 
+
+- 뷰가 동작하려면 **URL을 연결**해야한다.
+
+  ```python
+  from django.urls import path
+  from . import views
+  
+  urlpatterns = [
+      path('',views.index,name='index'),
+      path('<int:question_id>/',views.detail,name='detail'),
+      path('<int:question_id>/results',views.results,name='results'),
+      path('<int:question_id>/vote',views.vote,name='vote')
+  ]
+  ```
+
+  `<int:변수명>` : 값이 변하는 변수를 의미한다.
+
+- `http://127.0.0.1:8000/polls/`를 띄워보면 잘 나온다.
+
+- 하지만 이건 MTV 패턴을 따르지 않았기 때문에 템플릿을 만들어 파이썬 코드와  HTML 코드를 분리해본다.
+
+- #### polls/templates/polls/index.html
+
+  ```html
+  <body>
+      {% if latest_question_list %}
+          <ul>
+              {% for question in latest_question_list %}
+                  <li><a href="/polls/{{question.id}}/">{{question.question_text}}</a> </li>
+              {% endfor %}
+          </ul>
+      {% else %}
+          <p>투표거리가 아직 없습니다.</p>
+      {% endif %}
+  </body>
+  ```
+
+  스파게띠 코드네,, 잘 좀 바꿔봅시다.
+
+  - 만든 템플릿을 이용하려면 **뷰를 변경**해야한다.
+  - 템플릿 불러오기 위해 인덱스 함수를 변경해보자.
+
+  ```python
+  def index(request):
+      latest_question_list = Question.objects.order_by('-pub_date')[:5]
+      context = {
+          'latest_question_list':latest_question_list,
+      }
+  
+      # 쿼리들의 질문을 나열한 것들을 합친 결과 : output
+      # output=', '.join([q.question_text for q in latest_question_list])
+      # return HttpResponse("Hello, world. You're at the polls index!!")
+      return render(request,'polls/index.html',context)
+  ```
+
+잘 변환되었다.
+
+
+

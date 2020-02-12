@@ -3,7 +3,7 @@
   ```bash
   pip install django	# 가상환경에서 장고 설치
   django-admin startproject config .	# config 파일 설치
-  python manage.py startapp polls	# 만들고자 하는 앱 생성 cmd
+  python manage.py startapp polls	# 만들고자 하는 앱 생성! cmd
   ```
 
 - #### 뷰 만들기 - views.py

@@ -284,5 +284,22 @@ class Choice(models.Model):
       return render(request,'polls/detail.html',{'question':question})
   ```
 
-  
+- #### namespace 설정하기
+
+  - 분리된 경로를 만드는 개념.
+
+  - `detail` 함수가 polls에도 있고 다른 앱에도 있을 경우 어느 뷰의 url을 만들지 헷갈리기 때문에 설정해야한다.
+
+  - `urls.py`에서 설정해준다.
+
+    ![image](https://user-images.githubusercontent.com/26649731/74313833-c5bbe200-4db7-11ea-891c-ef5a8a6cccac.png)
+
+  - 이럼 끝이기 때문에 `index.html`에서도 설정 바꿔준다.
+
+    ```html
+    <a href="/polls/{{question.id}}/">{{question.question_text}}</a>
+    <a href="{% url 'polls:detail' question.id %}">{{question.question_text}}</a>
+    ```
+
+    
 

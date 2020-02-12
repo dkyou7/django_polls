@@ -272,3 +272,17 @@ class Choice(models.Model):
 - 그리고 이걸 의미있게 만드는 것이 `urls.py`이다. 즉, 연결시켜주어야 한다.
 - `models.py`는 view 기능을 실행시키기 위한 `VO` 객체이다. 즉, 데이터베이스 부분을 담당하고, 스키마 구성을 돕는다. 보통 `migrate`명령어로 관리된다.
 
+- #### 404 오류 잡아내기
+
+  ```python
+  from django.shortcuts import render, get_object_or_404
+  
+  # 투표 상세 : 투표의 상세 항목 표시
+  def detail(request,question_id):
+      # 내장함수가 아주 편리하게 되어있다.
+      question = get_object_or_404(Question,pk=question_id)
+      return render(request,'polls/detail.html',{'question':question})
+  ```
+
+  
+

@@ -170,7 +170,7 @@ class Choice(models.Model):
   admin.site.register(Question)	# [Question] 모델을 등록해준다.
   ```
 
-![question_admin_register](.\img\question_admin_register.jpg)
+![image](https://user-images.githubusercontent.com/26649731/74306754-c304c100-4da6-11ea-999b-a8f51da9bb84.png)
 
 잘 등록된 것을 볼 수 있다.
 

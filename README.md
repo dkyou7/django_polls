@@ -301,5 +301,47 @@ class Choice(models.Model):
     <a href="{% url 'polls:detail' question.id %}">{{question.question_text}}</a>
     ```
 
-    
+- #### 제네릭 뷰로 지금까지 한거 무용지물 만들기
 
+  - 장고에서 미리 준비한 뷰.
+  - 함수형 뷰 --> 클래스형 뷰
+
+  ```python
+  # 인덱스
+  class IndexView(generic.ListView):
+      template_name = 'polls/index.html'
+      context_object_name = 'latest_question_list'
+  
+      def get_queryset(self):
+          """Return the last five published questions."""
+          return Question.objects.order_by('-pub_date')[:5]
+  
+  # 투표 상세 : 투표의 상세 항목 표시
+  class DetailView(generic.DetailView):
+      model = Question
+      template_name = 'polls/detail.html'
+  
+  # 투표 결과 : 선택한 답변 반영 후 결과 보여줌
+  class ResultsView(generic.DetailView):
+      model = Question
+      template_name = 'polls/results.html'
+  ```
+
+  - 클래스형 뷰로 변경 시 `urls.py` 도 변경해줘야 한다.
+
+  ```python
+  urlpatterns = [
+      # path('',views.index,name='index'),
+      # path('<int:question_id>/',views.detail,name='detail'),
+      # path('<int:question_id>/results',views.results,name='results'),
+      # path('<int:question_id>/vote',views.vote,name='vote')
+      path('',views.IndexView.as_view(),name='index'),
+      path('<int:pk>/',views.DetailView.as_view(),name='detail'),
+      path('<int:pk>/results/',views.ResultsView.as_view(),name='results'),
+      path('<int:pk>/question_id/vote/',views.vote,name='vote')
+  ]
+  ```
+
+  - 클래스형 뷰 사용시 `as_view()`를 꼭 사용해주자.
+
+  
